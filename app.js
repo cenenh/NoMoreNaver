@@ -8,6 +8,10 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var test = require('./routes/test');
+var keyword = require('./routes/getKeywords');
+var ping = require('./routes/ping');
+var test = require('./routes/test');
+
 var app = express();
 
 // view engine setup
@@ -21,10 +25,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'controller')));
 app.use('/',express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/test', test);
+app.use('/getKeywords', keyword);
+app.use('/ping', ping);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

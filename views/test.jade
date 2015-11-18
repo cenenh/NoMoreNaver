@@ -1,0 +1,9 @@
+//extends _bootstrap
+extends ../node_modules/jade-bootstrap/_bootstrap
+
+block body
+  +dropdown("My Dropdown Menu",[
+    {text:"Bootstrap",url:"http://www.getbootstrap.com"},
+    {text:"JADE",url:"http://www.jade-lang.com"},
+    {text:"NodeJS",url:"http://www.nodejs.org"}
+  ])

@@ -1,67 +1,48 @@
 extends layout
-
+  
 block content
+  
   h1= title
   p Welcome to #{title}
 
-  script.
-    $( document ).ready(function() {
-      console.log("document ready!")
-    });
-    
+  script(src='/javascripts/view_getkeyword.js')
+
   body
     div#date-pickers
-      script.
-        $(function() {
-          $( "#datepicker1" ).datepicker({
-            onSelect: function(date) {
-              console.log("datepicker1 : " + date);
-            },
-            dateFormat: 'yy-mm-dd'
-          });
-        });
-      script.
-        $(function() {
-          $( "#datepicker2" ).datepicker({
-            onSelect: function(date) {
-              console.log("datepicker2 : " + date);
-            },
-            dateFormat: 'yy-mm-dd'
-          });
-        });
+      script(src='/javascripts/view_datepicker.js')
       p
-        | 조회기간: 
-        input#datepicker1(type='text')
-        |  ~ 
-        input#datepicker2(type='text')
-        
-    div#my-div
+      | 카테고리 :  
+      select(id='category', name='category')
+        option 정치
+        option 사회
       p
+      | 날짜선택 : 
+      input#datepicker1(type='text')
+      |         
+      input(type='submit', value='조회')
+       
+      script. //submit 클릭시 이벤트
+        $(function() {
+          $( "input[type=submit]" )
+            .button()
+            .click(function( event ){
+              console.log("button-clicked");
+              var date = $('#datepicker1').val();
+              var category = $('#category').val();
+              if (date.length != 0){
+                alert(date + " and " + category );
+                //do query
+              }
+              else {
+                alert("날짜를 선택해주세요!");
+              }
+            });
+        });
+    
+    //The div of wordcloud    
+    div#wordcloud(style='width: 1050px; height: 350px;')
+    
     .footer
-      
-    script.
-      var words = [
-        { text: "Google", link: "http://www.google.com", weight: 10 },
-        { text: "Yahoo!", link: "http://www.yahoo.com", weight: 9 },
-        { text: "Bing", link: "http://www.bing.com", weight: 9 },
-        { text: "Larger 1", weight: 8 },
-        { text: "Larger 2", weight: 8 },
-        { text: "Larger 3", weight: 7 },
-        { text: "Larger 4", weight: 7 },
-        { text: "Medium 1", weight: 6 },
-        { text: "Medium 2", weight: 5 },
-        { text: "Medium 3", weight: 4 },
-        { text: "Medium 4", weight: 4 },
-        { text: "Smaller 1", weight: 3 },
-        { text: "Smaller 2", weight: 3 },
-        { text: "Small 1", weight: 2 },
-        { text: "Small 2", weight: 1 },
-        { text: "Small 3", weight: 1 }
-      ];
-      $('#my-div').jQCloud(words, {
-        width: 500,
-        height: 350
-      });
         
 
   
