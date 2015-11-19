@@ -48,8 +48,8 @@
             var date = $('#datepicker').val();
             var category = $('#category_selected').val();
 
-            if (date.length != 0){
-              alert(date + " and " + category );
+            if (date.length !== 0){
+              //alert(date + " and " + category );
               $.ajax({
                 url: 'http://localhost:3333/getKeywords',
                 type: 'POST',
@@ -63,60 +63,64 @@
                 },
                 success : function(response){
                   var responses = response.data;
-                  console.log(responses);
+                  console.log("The response from Server : " + responses);
                   var cloud = document.getElementById('wordcloud3');
                   var date = $('#datepicker').val();
 
-                  for(var i = 0; i < responses.length; i++){
-                    var index = check_keyword_index(responses[i]);
-                    console.log(index);
-                    var keyword = get_keyword(responses[i], index);
-                    console.log(keyword);
-
-                    var word = {
-                      text : responses[i].keyword1 + " / " + responses[i].keyword2 + " / " + responses[i].keyword3,
-                      weight : Math.max(responses[i].tf1, responses[i].tf2, responses[i].tf3),
-                      link : get_url(keyword, date)
-                    };
-
-                    var new_span = document.createElement("span");
-                    var weight = document.createAttribute("data-weight");
-                    var style = document.createAttribute("style");
-                    var a_tag = document.createElement("a");
-
-                    style.value = "display: none;";
-                    weight.value = parseInt(word.weight)
-                    weight.value = parseInt(weight.value);
-                    new_span.setAttributeNode(weight);
-                    new_span.setAttributeNode(style);
-                    var textNode = document.createTextNode(word.text);
-                    a_tag.setAttribute('href', word.link);
-                    a_tag.appendChild(textNode);
-                    //new_span.appendChild(textNode);
-                    new_span.appendChild(a_tag);
-                    cloud.appendChild(new_span);
+                  if(responses.length === 0){
+                    alert('아직 데이터가 없어요 ㅠ.ㅠ');
                   }
-                  $("#wordcloud3").awesomeCloud({
-                    "size" : {
-                      "grid" : 8,
-                      "factor" : 0,
-                      "normalize" : true
-                    },
-                    /*"color" : {
-                      "background" : "#036"
-                    },*/
-                    "options" : {
-                      "color" : "gradient",
-                      "rotationRatio" : 0,
-                      "printMultiplier" : 3,
-                      "sort" : "highest"
-                    },
-                    "font" : "'Jeju Gothic', 'Noto Sans KR', 'Nanum Gothic', 'Nanum Pen Script'",
-                    "shape" : "circle"
-                  });
-                }
-              });
-            }
+
+                  else{ // responses.length is not zero
+                    for(var i = 0; i < responses.length; i++){
+                      var index = check_keyword_index(responses[i]);
+                      var keyword = get_keyword(responses[i], index);
+
+                      var word = {
+                        text : responses[i].keyword1 + " / " + responses[i].keyword2 + " / " + responses[i].keyword3,
+                        weight : Math.max(responses[i].tf1, responses[i].tf2, responses[i].tf3),
+                        link : get_url(keyword, date)
+                      };
+
+                      var new_span = document.createElement("span");
+                      var weight = document.createAttribute("data-weight");
+                      var style = document.createAttribute("style");
+                      var a_tag = document.createElement("a");
+
+                      style.value = "display: none;";
+                      weight.value = parseInt(word.weight)
+                      weight.value = parseInt(weight.value);
+                      new_span.setAttributeNode(weight);
+                      new_span.setAttributeNode(style);
+                      var textNode = document.createTextNode(word.text);
+                      a_tag.setAttribute('href', word.link);
+                      a_tag.appendChild(textNode);
+                      //new_span.appendChild(textNode);
+                      new_span.appendChild(a_tag);
+                      cloud.appendChild(new_span);
+                    } // make html first and call awesomeCloud plugin
+                    $("#wordcloud3").awesomeCloud({
+                      "size" : {
+                        "grid" : 8,
+                        "factor" : 0,
+                        "normalize" : true
+                      },
+                      /*"color" : {
+                        "background" : "#036"
+                      },*/
+                      "options" : {
+                        "color" : "gradient",
+                        "rotationRatio" : 0,
+                        "printMultiplier" : 3,
+                        "sort" : "highest"
+                      },
+                      "font" : "'Jeju Gothic', 'Noto Sans KR', 'Nanum Gothic', 'Nanum Pen Script'",
+                      "shape" : "circle"
+                    }); //call awesomeCloud.js
+                  }
+                }//the callback function of ajax.POST.success
+              }); // ajax.POST()
+            } // if(date.length != 0)
             else {
               alert("날짜를 선택해주세요!");
             }
@@ -140,6 +144,7 @@
       <p><br><input type='submit' id='myButton' value='Keyword 조회'></p>
     </div>
     <div id="wordcloud3" class="wordcloud" style="height:900px;width:1000px;"></div>
+    <div id="notyet"></div>
   </body>
 
 </html>

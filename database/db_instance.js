@@ -8,7 +8,7 @@ function db_instance(){
 // Class methods
 db_instance.prototype.connect = function(){
   this.dbConnection = mysql.createConnection({
-    host: '165.194.35.165',
+    host: 'localhost',
     port: 3306,
     user: 'root',
     password: 'bigdata01',
