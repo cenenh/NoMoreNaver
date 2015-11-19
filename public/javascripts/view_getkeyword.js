@@ -1,44 +1,5 @@
 
 
-$( document ).ready(function() {
-  console.log("document ready!")
-  var words = [];
-  $.ajax({
-    url: 'http://localhost:3333/getKeywords',
-    type: 'GET',
-    dataType: "json",
-    error : function(){
-      alert("ajax HTTP GET error!");
-      alert();
-    },
-    success : function(response){
-      //console.log(response);
-      var responses = response.data;
-      console.log(responses);
-      for(var i = 0; i < responses.length; i++){
-        var word = {
-          text : responses[i].keyword1 + " / " + responses[i].keyword2 + " / " + responses[i].keyword3,
-          //text : responses[i].keyword1,
-          weight : Math.max(responses[i].tf1, responses[i].tf2, responses[i].tf3) / 10
-        };
-        words.push(word);
-        word = {};
-        //console.log(responses[i]);
-        //console.log(responses[i].keyword1 + " with tf1 : " + responses[i].tf1);
-        //console.log(responses[i].keyword2 + " with tf2 : " + responses[i].tf2);
-        //console.log(responses[i].keyword3 + " with tf3 : " + responses[i].tf3);
-      }
-      $('#wordcloud').jQCloud(words,{
-        autoResize: true,
-        fontSize: {
-            from: 1.0,
-            to: 0.02
-        }
-      });
-    },
-  });
-});
-
 /*var words = [
   { text: "자취", weight: 10 },
   { text: "배달", weight: 9 },

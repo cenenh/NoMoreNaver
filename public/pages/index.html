@@ -1,24 +1,145 @@
 <!DOCTYPE html>
-<html ng-app>
+<html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>No More Naver</title>
     <link rel='stylesheet', href='/stylesheets/style.css'>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.css">
-    <!-- Angular Material Dependencies -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-aria.min.js"></script>
-    <!-- Angular Material Javascript now available via Google CDN; version 0.11.2 used here -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.11.3.js"></script>
+    <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src='/javascripts/awesomeCloud.js'></script>
+    <script src='/javascripts/view_datepicker.js'></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <script src="/javascripts/myUtil.js"></script>
+    <style type="text/css">
+      .wordcloud3 {
+        border: 1px solid #036;
+        height: 7in;
+        margin: 0.5in auto;
+        padding: 0;
+        page-break-after: always;
+        page-break-inside: avoid;
+        width: 7in;
+      }
+    </style>
+    <script>
+			$(document).ready(function(){
+        $('.form-control').on('change', function(){
+            var selected = $(this).find("option:selected").val();
+            console.log(selected);
+        });
+      });
 
+    </script>
+    <script>
+      $(function() {
+        $( "input[type=submit], a, button" )
+          .button()
+          .click(function( event ) {
+            console.log("button-clicked");
+
+            var date = $('#datepicker').val();
+            var category = $('#category_selected').val();
+
+            if (date.length != 0){
+              alert(date + " and " + category );
+              $.ajax({
+                url: 'http://localhost:3333/getKeywords',
+                type: 'POST',
+                data : {
+                  date : date,
+                  category: category
+                },
+                dataType: "json",
+                error : function(){
+                  alert("ajax HTTP GET error!");
+                },
+                success : function(response){
+                  var responses = response.data;
+                  console.log(responses);
+                  var cloud = document.getElementById('wordcloud3');
+                  var date = $('#datepicker').val();
+
+                  for(var i = 0; i < responses.length; i++){
+                    var index = check_keyword_index(responses[i]);
+                    console.log(index);
+                    var keyword = get_keyword(responses[i], index);
+                    console.log(keyword);
+
+                    var word = {
+                      text : responses[i].keyword1 + " / " + responses[i].keyword2 + " / " + responses[i].keyword3,
+                      weight : Math.max(responses[i].tf1, responses[i].tf2, responses[i].tf3),
+                      link : get_url(keyword, date)
+                    };
+
+                    var new_span = document.createElement("span");
+                    var weight = document.createAttribute("data-weight");
+                    var style = document.createAttribute("style");
+                    var a_tag = document.createElement("a");
+
+                    style.value = "display: none;";
+                    weight.value = parseInt(word.weight)
+                    weight.value = parseInt(weight.value);
+                    new_span.setAttributeNode(weight);
+                    new_span.setAttributeNode(style);
+                    var textNode = document.createTextNode(word.text);
+                    a_tag.setAttribute('href', word.link);
+                    a_tag.appendChild(textNode);
+                    //new_span.appendChild(textNode);
+                    new_span.appendChild(a_tag);
+                    cloud.appendChild(new_span);
+                  }
+                  $("#wordcloud3").awesomeCloud({
+                    "size" : {
+                      "grid" : 8,
+                      "factor" : 0,
+                      "normalize" : true
+                    },
+                    /*"color" : {
+                      "background" : "#036"
+                    },*/
+                    "options" : {
+                      "color" : "gradient",
+                      "rotationRatio" : 0,
+                      "printMultiplier" : 3,
+                      "sort" : "highest"
+                    },
+                    "font" : "'Jeju Gothic', 'Noto Sans KR', 'Nanum Gothic', 'Nanum Pen Script'",
+                    "shape" : "circle"
+                  });
+                }
+              });
+            }
+            else {
+              alert("날짜를 선택해주세요!");
+            }
+          });
+      });
+    </script>
   </head>
 
-  <body align="center">
-    <div ng-app="">
-     	<p>Name: <input type="text" ng-model="name"></p>
-     	<p ng-bind="name"></p>
+  <body>
+    <div id="hello">
+      Hello! NoMoreNaver
     </div>
+    <div id="date-pickers" class="col-md-2">
+      <label for="date">Date</label>
+        <p><input type="text" id="datepicker"></p>
+      <label for="category">Category</label>
+        <select class="form-control" id="category_selected" data-width="30%">
+          <option value="정치">정치</option>
+          <option value="사회">사회</option>
+        </select>
+      <p><br><input type='submit' id='myButton' value='Keyword 조회'></p>
+    </div>
+    <div id="wordcloud3" class="wordcloud" style="height:900px;width:1000px;"></div>
   </body>
 
 </html>

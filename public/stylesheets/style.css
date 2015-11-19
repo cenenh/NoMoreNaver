@@ -1,10 +1,31 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+@import url(http://fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+
+div{
+  padding: 15px;
+}
+
+#hello {
+  padding: 15px;
+  font: 30px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#category{
+  padding: 15px;
+}
+
+#wordcloud3{
+  padding: 15px;
 }
 
 a {
   color: #00B7FF;
+}
+
+div.ui-datepicker{
+ font-size:10px;
 }
 
 select{
