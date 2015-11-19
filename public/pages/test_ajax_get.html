@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>No More Naver</title>
+    <link rel='stylesheet', href='/stylesheets/style.css'>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.11.3.js"></script>
+    <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src='/javascripts/awesomeCloud.js'></script>
+    <script src='/javascripts/view_datepicker.js'></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <script src="/javascripts/myUtil.js"></script>
+
+  <script>
+    $(function() {
+      $( "input[type=submit], a, button" )
+        .button()
+        .click(function( event ) {
+          var date = $('#datepicker').val();
+          var category = $('#category_selected').val();
+          if (date.length != 0){
+            console.log(date);
+            $.ajax({
+              type: "POST",
+              url: "http://localhost:3333/getKeywords",
+              data: {
+                date: date,
+                category: category
+              },
+              dataType: "json",
+              error : function(){
+                alert("ajax HTTP POST error!");
+              },
+              success: function(response){
+                console.log(response);
+                alert("응답 도착!")
+              }
+            });
+
+          }
+          else{
+            alert("000");
+          } //data.length == 0
+        });
+    });
+  </script>
+
+  <body>
+    <div id="hello">
+      Hello! NoMoreNaver
+    </div>
+    <div id="date-pickers" class="col-md-2">
+      <label for="date">Date</label>
+        <p><input type="text" id="datepicker"></p>
+      <label for="category">Category</label>
+        <select class="form-control" id="category_selected" data-width="30%">
+          <option value="정치">정치</option>
+          <option value="사회">사회</option>
+        </select>
+      <p><br><input type='submit' id='myButton' value='Keyword 조회'></p>
+    </div>
+  </body>
+
+</html>
