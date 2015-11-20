@@ -62,9 +62,12 @@
                   alert("ajax HTTP GET error!");
                 },
                 success : function(response){
+                  var cloud = document.getElementById('wordcloud3');
+                  //delete old data to show new data.
+                  cloud.innerHTML = ' ';
                   var responses = response.data;
                   console.log("The response from Server : " + responses);
-                  var cloud = document.getElementById('wordcloud3');
+
                   var date = $('#datepicker').val();
 
                   if(responses.length === 0){
