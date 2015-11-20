@@ -14,11 +14,14 @@ function check_keyword_index(res){
 }
 
 function get_url(keyword, date){
-  var host_link = 'http://news.search.naver.com/search.naver?where=news&query=';
-  var encoding_link = '&ie=utf8&pd=4';
+  date = date.split('-').join('.');
+  var host_link = 'http://news.search.naver.com/search.naver?where=news&se=0&query=';
+  var encoding_link = '&ie=utf8&sm=tab_opt&sort=0&photo=0&field=0&reporter_article=&pd=3';
   var ds_link = '&ds=';
   var de_link = '&de=';
-  return host_link+keyword+encoding_link+ds_link+date+de_link+date;
+  var last = '&mson=0&refresh_start=0&related=0';
+
+  return host_link+keyword+encoding_link+ds_link+date+de_link+date+last;
 }
 
 function get_keyword(res, index){
