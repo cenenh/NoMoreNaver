@@ -51,7 +51,7 @@
             if (date.length !== 0){
               //alert(date + " and " + category );
               $.ajax({
-                url: 'http://localhost:3333/getKeywords',
+                url: '/getKeywords',
                 type: 'POST',
                 data : {
                   date : date,
