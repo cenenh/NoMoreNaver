@@ -94,6 +94,7 @@
                       new_span.setAttributeNode(style);
                       var textNode = document.createTextNode(word.text);
                       a_tag.setAttribute('href', word.link);
+                      a_tag.setAttribute('target', '_blank');
                       a_tag.appendChild(textNode);
                       //new_span.appendChild(textNode);
                       new_span.appendChild(a_tag);
